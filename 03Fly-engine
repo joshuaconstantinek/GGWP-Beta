@@ -1,6 +1,6 @@
 #!/system/bin/sh
 
-#-GGWP-Beta Edition >>Fly_engine.. Pre Tested on CM 12.1 <<#
+#-GGWP-Beta Edition >>Fly_engine.. New Logs <<#
 #This Script is Push $mem (real Ram on 1gb version of redmi2 )#
 #Thanks to Slaid for Fly-On#
 #Follow My Project on Github joshuacontantine.k#
@@ -126,16 +126,23 @@ echo "NO_LB_MIN" >> /sys/kernel/debug/sched_features
 # VM Tweaks
  
  mem=`free|grep Mem | awk '{print $2}'`;
-
-if [ "$mem" -lt 512000 ];then
-	sysctl -w vm.dirty_background_ratio=20;
-	sysctl -w vm.dirty_ratio=35;
+ 
+	#$mem of MIUIV6 6.6.8 ver
+if [ "$mem" -lt 919520 ];then
+	sysctl -w vm.dirty_background_ratio=15;
+	sysctl -w vm.dirty_ratio=15;
+	
+	#$mem of CM 12.1 
 elif [ "$mem" -lt 917524  ];then
 	sysctl -w vm.dirty_background_ratio=15;
 	sysctl -w vm.dirty_ratio=15;
+	
+	
 elif [ "$mem" -lt 1536000 ];then
 	sysctl -w vm.dirty_background_ratio=10;
 	sysctl -w vm.dirty_ratio=10;
+	
+	
 else
     sysctl -w vm.dirty_background_ratio=5;
 	sysctl -w vm.dirty_ratio=10;
@@ -145,10 +152,14 @@ fi;
   
   mem=`free|grep Mem | awk '{print $2}'`;
   
+  	#$mem of Cm 12.1
   if [ "$mem" -lt 917524  ];then
 	setprop dalvik.vm.heapsize=96m;
-elif [ "$mem" -lt 2048000 ];then
-    setprop dalvik.vm.heapsize=256m;
+	
+	#$mem of MIUIV6 6.6.8 ver
+elif [ "$mem" -lt 919520 ];then
+    setprop dalvik.vm.heapsize=96m;
+    
 else
     setprop dalvik.vm.heapsize=512m;
 	
