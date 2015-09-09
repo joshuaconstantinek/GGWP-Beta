@@ -27,10 +27,13 @@ echo "0,1,3,5,7,15" > /sys/module/lowmemorykiller/parameters/adj;
 
 mem=`free|grep Mem | awk '{print $2}'`;
 
+    #This is $mem of CM 12.1
 if [ "$mem" -lt 917524 ];then
     echo "2790,4120,7090,13090,15040,19040" > /sys/module/lowmemorykiller/parameters/minfree;	
-elif [ "$mem" -lt 2048000 ];then
-    echo "5632,9216,13234,17920,21605,31860" > /sys/module/lowmemorykiller/parameters/minfree;
+    
+    #This is $mem of MIUIV6 6.6.8 ver
+elif [ "$mem" -lt 919520 ];then
+    echo "2800,4150,7130,13120,1580,1990" > /sys/module/lowmemorykiller/parameters/minfree;
 else
     echo "6144,11520,16540,22400,28165,41418" > /sys/module/lowmemorykiller/parameters/minfree;  
 fi;
