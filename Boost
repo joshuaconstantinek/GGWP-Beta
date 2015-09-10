@@ -1,0 +1,36 @@
+#!/system/bin/sh
+
+clear
+echo "=============================";
+echo "= Shut up and wait a minute =";
+echo "=============================";
+echo "";
+free | awk '/Mem/{print "Free Memory (Before Boost) : "$4/1024" MB";}'
+echo "";
+echo "";
+echo "";
+echo -n " Im trying";
+sync;
+sleep 1
+echo -n ".";
+echo "3" > /proc/sys/vm/drop_caches;
+sleep 1
+echo -n ".";
+dc=/proc/sys/vm/drop_caches
+dc_v=`cat $dc`
+if [ "$dc_v" -gt 1 ]; then
+  #Try to clean drop cache
+	echo "1" > /proc/sys/vm/drop_caches;
+else
+	echo " Make sure Your pah is available,retry ! ";
+	exit
+fi
+sleep 1
+echo -n ".";
+echo "";
+sleep 1
+echo " [Your fucking ram is boosted ] ";
+echo "";
+echo "";
+echo "";
+free | awk '/Mem/{print "Look : "$4/1024" MB";}'
