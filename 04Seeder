@@ -1,0 +1,31 @@
+#!/system/bin/sh
+#GGWP Beta seeder 
+#this is free source
+#Mod By me
+#thanks to L_speed
+
+mount -o remount,rw /
+mount -o remount,rw rootfs
+mount -o remount,rw /system
+busybox mount -o remount,rw /
+busybox mount -o remount,rw rootfs
+busybox mount -o remount,rw /system
+
+
+
+busybox rm -f $LS
+busybox touch $LS
+
+busybox echo "$( date +"%m-%d-%Y %H:%M:%S" ) Applying enlarger seeder profile.." | tee -a $LS
+
+busybox sleep 10
+
+busybox echo "128" > /proc/sys/kernel/random/read_wakeup_threshold
+busybox echo "1240" > /proc/sys/kernel/random/write_wakeup_threshold
+
+busybox sleep 1
+
+if [ /proc/sys/kernel/random/read_wakeup_threshold=1376 ]; then
+	busybox echo "$( date +"%m-%d-%Y %H:%M:%S" ) Good job seeder has been applied" | tee -a $LS
+else
+	busybox echo "$( date +"%m-%d-%Y %H:%M:%S" ) Please retry This fail." | tee -a $LS
