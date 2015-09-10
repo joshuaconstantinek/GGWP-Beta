@@ -1,0 +1,71 @@
+#!/system/bin/sh
+
+
+#-GGWP-Beta Edition >>Ram Manager script.. Based On CM 12.1 Ram Status<<#
+#This Script For Xiaomi Redmi 2 1gb version#
+#Thanks to Slaid for Fly-On#
+#Follow My Project on Github joshuacontantine.k#
+#Follow me in XDA joshuaconstantine@xda#
+#This is Beta Project#
+#This is open source#
+FLY=/data/Fly-On/02ram_manager.log
+
+busybox rm -f $FLY
+busybox touch $FLY
+
+echo "# Fly-On Mod™ LOGGING ENGINE" | tee -a $FLY
+echo "" | tee -a $FLY
+echo "$( date +"%m-%d-%Y %H:%M:%S" ) Tweaking minfree values & adj lowmem values..." | tee -a $FLY;
+
+# ADJ Values
+
+echo "0,1,3,5,7,15" > /sys/module/lowmemorykiller/parameters/adj;
+
+
+
+# Minfree Values 
+
+mem=`free|grep Mem | awk '{print $2}'`;
+
+    #This is $mem of CM 12.1
+if [ "$mem" -lt 917524 ];then
+    echo "2790,4120,7090,13090,15040,19040" > /sys/module/lowmemorykiller/parameters/minfree;	
+    
+    #This is $mem of MIUIV6 6.6.8 ver
+elif [ "$mem" -lt 919520 ];then
+    echo "2800,4150,7130,13120,1580,1990" > /sys/module/lowmemorykiller/parameters/minfree;
+else
+    echo "6144,11520,16540,22400,28165,41418" > /sys/module/lowmemorykiller/parameters/minfree;  
+fi;
+
+# ZRAM tweak
+
+if [ -e /sys/block/zram0/comp_algorithm ]; then
+busybox echo "lz4" > /sys/block/zram0/comp_algorithm
+fi;
+
+if [ -e /sys/block/zram0 ]; then
+busybox echo $((1024*1024*96)) > /sys/block/zram0/disksize
+busybox sysctl -e -w vm.swappiness=10
+busybox mkswap /dev/block/zram0
+busybox swapon /dev/block/zram0
+fi;
+
+# Kernel samepage merging tweaks
+
+mount -o remount,rw /
+mount -o remount,rw rootfs
+mount -o remount,rw /system
+busybox mount -o remount,rw /
+busybox mount -o remount,rw rootfs
+busybox mount -o remount,rw /system
+
+chmod 644 /sys/kernel/mm/ksm/*
+
+echo "1" > /sys/kernel/mm/ksm/run
+echo "512" > /sys/kernel/mm/ksm/pages_to_scan
+echo "1024" > /sys/kernel/mm/ksm/sleep_millisecs
+
+
+echo "" | tee -a $FLY
+echo "$( date +"%m-%d-%Y %H:%M:%S" ) GGWP Beta Ram Manager is aplied" | tee -a $FLY;
